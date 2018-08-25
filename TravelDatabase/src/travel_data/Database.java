@@ -1,8 +1,10 @@
 package travel_data;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Database {
@@ -39,6 +41,7 @@ public class Database {
 
         }
     }
+
     // Insert data readed from file into database
     protected void insertIntoDb() {
 
@@ -65,18 +68,11 @@ public class Database {
 
     }
 
-    protected List<List<String>> selectFromDB(String query) {
+    protected ObservableList<Table_TRAVELDATA> selectFromDB(String query) {
         Statement state = null;
         ResultSet result = null;
-        List<List<String>> resultList = new ArrayList<>();
-        List<String> nr_col = new ArrayList<>();
-        List<String> loc_col = new ArrayList<>();
-        List<String> country_col = new ArrayList<>();
-        List<String> date_from_col = new ArrayList<>();
-        List<String> date_to_col = new ArrayList<>();
-        List<String> realm_col = new ArrayList<>();
-        List<String> cost_col = new ArrayList<>();
-        List<String> curr_col = new ArrayList<>();
+        List<Table_TRAVELDATA> resultList = new ArrayList<>();
+
         try {
 
             Connection connection = DriverManager.getConnection(url);
@@ -84,17 +80,17 @@ public class Database {
             result = state.executeQuery(query);
 
             while (result.next()) {
+                Table_TRAVELDATA record = new Table_TRAVELDATA(
+                        result.getString(2),
+                        result.getString(3),
+                        result.getString(4),
+                        result.getString(5),
+                        result.getString(6),
+                        result.getString(7),
+                        result.getString(8)
+                );
 
-                nr_col.add(result.getString(1));
-                loc_col.add(result.getString(2));
-                country_col.add(result.getString(3));
-                date_from_col.add(result.getString(4));
-                date_to_col.add(result.getString(5));
-                realm_col.add(result.getString(6));
-                cost_col.add(result.getString(7));
-                curr_col.add(result.getString(8));
-
-
+                resultList.add(record);
             }
 
         } catch (SQLException e) {
@@ -109,13 +105,12 @@ public class Database {
             }
         }
 
-        resultList.addAll(
-                Arrays.asList(nr_col,loc_col, country_col, date_from_col, date_to_col, realm_col, cost_col, curr_col));
-      /*  for(List<String>res : resultList)
-            System.out.println(res);
+        for (Table_TRAVELDATA t : resultList)
+            System.out.println(t.getLocale() + " " + t.getCountry() + " " + t.getDateFrom() + " " + t.getDateTo() +" " + t.getRealm() + " " + t.getCost() + " " + t.getCurr());
+        ObservableList<Table_TRAVELDATA> toObserve = FXCollections.observableList(resultList);
 
-      */
-        return resultList;
+
+        return toObserve;
     }
 
     public String[] getColumns() {

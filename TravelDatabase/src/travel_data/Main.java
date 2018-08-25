@@ -1,15 +1,14 @@
 package travel_data;
 
 import javafx.application.Application;
-import javafx.beans.property.ReadOnlyStringWrapper;
+
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -24,19 +23,18 @@ import java.util.*;
 
 
 public class Main extends Application {
-    private static final String[] columnNames = {"NR","LOCALE", "COUNTRY", "DATE FROM", "DATE TO", "REALM", "COST", "CURR"};
+    private static final String[] columnNames = {"NR", "LOCALE", "COUNTRY", "DATE FROM", "DATE TO", "REALM", "COST", "CURR"};
     private static VBox tableBoxView;
     private static Scene scene;
     private static boolean tableVisible;
     private static Button tableButton;
     private static Database db;
-    private static List<TableColumn<Integer, String>> tableColumnList;
+    private static TableColumn idCol, localeCol, countryCol, dateFromCol, dateToCol, realmCol, costCol, currCol;
     private static int rowsInTable = 0;
-
-
+    private static TableView<Table_TRAVELDATA> dataTable;
 
     @Override
-    public void start(Stage primaryStage)  {
+    public void start(Stage primaryStage) {
 
         tableVisible = false;
 
@@ -62,9 +60,10 @@ public class Main extends Application {
         // ==============================
 
         // Buttons disposing =======================================
-        menu.getChildren().addAll(tableButton,button1, button2, button3);
+        menu.getChildren().addAll(tableButton, button1, button2, button3);
         menu.setAlignment(Pos.BASELINE_LEFT);
         menu.setSpacing(10);
+        menu.setPadding(new Insets(10, 0, 0, 10));
         tableButton.setTranslateY(30);
         button1.setTranslateY(50);
         button2.setTranslateY(50);
@@ -121,12 +120,12 @@ public class Main extends Application {
         File dataDir = new File("data");
         TravelData travelData = new TravelData(dataDir);
 
-    // Main task form my academy ==============================================
+        // Main task form my academy ==============================================
         for (String locale : Arrays.asList("pl_PL", "en_GB")) {
             List<String> odlist = travelData.getOffersDescriptionsList(locale);
             for (String od : odlist) System.out.println(od);
         }
-    //========================================================================
+        //========================================================================
         String url = "jdbc:derby:C:\\TravelerZ Co.\\Database\\TravelData;create=true;user=test;password=test";
         db = new Database(url, travelData);
         db.createDb();
@@ -141,54 +140,63 @@ public class Main extends Application {
 
     //Basic schema of the table
     private static void tableSchema() {
-        tableColumnList = new ArrayList<>();
         tableBoxView.getChildren().clear();
+        dataTable = new TableView<>();
 
+       // dataTable.setEditable(true);
 
-        TableView table = new TableView();
-        table.setEditable(true);
-
-        for (int i = 0; i < rowsInTable; i++) {
-            table.getItems().add(i);
-        }
+      /*  for (int i = 0; i < rowsInTable; i++) {
+            dataTable.getItems().add(i);
+        }*/
 
         Label tableLabel = new Label("TravelerZ Co. Data From Database by Derby");
         tableLabel.setFont(new Font("Comic Sans", 18));
 
 
-        tableColumnList.add(new TableColumn<Integer, String>(columnNames[0]));
-        tableColumnList.add(new TableColumn<Integer, String>(columnNames[1]));
-        tableColumnList.add(new TableColumn<Integer, String>(columnNames[2]));
-        tableColumnList.add(new TableColumn<Integer, String>(columnNames[3]));
-        tableColumnList.add(new TableColumn<Integer, String>(columnNames[4]));
-        tableColumnList.add(new TableColumn<Integer, String>(columnNames[5]));
-        tableColumnList.add(new TableColumn<Integer, String>(columnNames[6]));
-        tableColumnList.add(new TableColumn<Integer, String>(columnNames[7]));
-
-        table.getColumns().addAll(tableColumnList);
-
         VBox vbox = new VBox();
         vbox.setSpacing(5);
         vbox.setPadding(new Insets(10, 0, 0, 10));
-        vbox.getChildren().addAll(tableLabel, table);
+        vbox.getChildren().addAll(tableLabel, dataTable);
+
+        idCol = new TableColumn(columnNames[0]);
+        idCol.setPrefWidth(200);
+        localeCol = new TableColumn(columnNames[1]);
+        localeCol.setPrefWidth(80);
+        countryCol = new TableColumn(columnNames[2]);
+        dateFromCol = new TableColumn(columnNames[3]);
+        dateToCol = new TableColumn(columnNames[4]);
+        realmCol = new TableColumn(columnNames[5]);
+        costCol = new TableColumn(columnNames[6]);
+        currCol = new TableColumn(columnNames[7]);
 
         tableBoxView.getChildren().addAll(vbox);
 
+
+
     }
+
+
+
     // View readed records
     private static void viewRecords(String query) {
 
-        List<List<String>> resultListFromDb = db.selectFromDB(query);
+
+        ObservableList<Table_TRAVELDATA> resultListFromDb = db.selectFromDB(query);
 
 
-        rowsInTable = resultListFromDb.get(0).size();
-        for (int i = 0; i < tableColumnList.size(); i++) {
-            int count = i;
-               tableColumnList.get(i).setCellValueFactory(e -> {
-                int rowIdx = e.getValue();
-                return new ReadOnlyStringWrapper(resultListFromDb.get(count).get(rowIdx));
-            });
-        }
+        rowsInTable = resultListFromDb.get(0).getRows();
+
+
+        //idCol
+        localeCol.setCellValueFactory(new PropertyValueFactory<Table_TRAVELDATA,String>("locale"));
+        countryCol.setCellValueFactory(new PropertyValueFactory<Table_TRAVELDATA,String>("country"));
+        dateFromCol.setCellValueFactory(new PropertyValueFactory<Table_TRAVELDATA,String>("dateFrom"));
+        dateToCol.setCellValueFactory(new PropertyValueFactory<Table_TRAVELDATA,String>("dateTo"));
+        realmCol.setCellValueFactory(new PropertyValueFactory<Table_TRAVELDATA,String>("realm"));
+        costCol.setCellFactory(new PropertyValueFactory<Table_TRAVELDATA,String>("cost"));
+        currCol.setCellValueFactory(new PropertyValueFactory<Table_TRAVELDATA,String>("curr"));
+
+        dataTable.setItems(resultListFromDb);
 
     }
 
@@ -230,6 +238,7 @@ public class Main extends Application {
         windowEvent.consume();
 
     }
+
     //Warning Action
     protected static void errorAction(String msg) {
 
