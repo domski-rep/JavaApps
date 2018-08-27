@@ -1,3 +1,12 @@
 pl	Japonia	2015-09-01	2015-10-01	jezioro	10000,20	PLN
 pl_PL	Włochy	2015-07-10	2015-07-30	morze	4000,10	PLN
 en_GB	United States	2015-07-10	2015-08-30	mountains	5,400.20	USD
+pl	Japonia	2015-10-01	2015-11-11	góry	10000,20	PLN
+pl_PL	Włochy	2016-01-10	2016-01-30	morze	14000,10	PLN
+en_GB	United States	2016-03-11	2016-04-30	mountains	3,200.20	USD
+pl	Włochy	2016-09-01	2016-10-01	morze	12000,20	PLN
+de	Italien	2016-11-11	2016-12-30	Gebirge	4000,10	EUR
+en_GB	Italy	2017-02-10	2016-03-30	mountains	7,400.20	USD
+pl	Japonia	2017-05-01	2017-06-02	jezioro	11000,20	PLN
+pl_PL	Japonia	2017-07-10	2017-07-30	morze	14000,10	PLN
+en_GB	Japan	2015-07-10	2015-08-30	mountains	15,400.20	USD
