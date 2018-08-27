@@ -2,10 +2,12 @@ package travel_data;
 
 import javafx.application.Application;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -32,6 +34,16 @@ public class Main extends Application {
     private static TableColumn idCol, localeCol, countryCol, dateFromCol, dateToCol, realmCol, costCol, currCol;
     private static int rowsInTable = 0;
     private static TableView<Table_TRAVELDATA> dataTable;
+    public static String a = " a";
+    private static final ObservableList<Table_TRAVELDATA> data =
+            FXCollections.observableArrayList(
+                    new Table_TRAVELDATA("Jacob", "Smith", "jacob.smith@example.com","sadsa","sad",a,a),
+                    new Table_TRAVELDATA("Isabella", "Johnson", "isabella.johnson@example.com",a,a,a,a),
+                    new Table_TRAVELDATA("Ethan", "Williams", "ethan.williams@example.com",a,a,a,a),
+                    new Table_TRAVELDATA("Emma", "Jones", "emma.jones@example.com",a,a,a,a),
+                    new Table_TRAVELDATA("Michael", "Brown", "michael.brown@example.com",a,a,a,a)
+            );
+    private static Scene tableScene;
 
     @Override
     public void start(Stage primaryStage) {
@@ -91,6 +103,7 @@ public class Main extends Application {
         signature.setFont(new Font("Calibri", 12));
         layout.setLeft(menu);
         layout.setBottom(signature);
+
         primaryStage.setScene(scene);
         primaryStage.setTitle("TravelerZ Co.");
         primaryStage.show();
@@ -143,23 +156,15 @@ public class Main extends Application {
         tableBoxView.getChildren().clear();
         dataTable = new TableView<>();
 
-       // dataTable.setEditable(true);
+        dataTable.setEditable(true);
 
-      /*  for (int i = 0; i < rowsInTable; i++) {
-            dataTable.getItems().add(i);
-        }*/
+
 
         Label tableLabel = new Label("TravelerZ Co. Data From Database by Derby");
         tableLabel.setFont(new Font("Comic Sans", 18));
 
-
-        VBox vbox = new VBox();
-        vbox.setSpacing(5);
-        vbox.setPadding(new Insets(10, 0, 0, 10));
-        vbox.getChildren().addAll(tableLabel, dataTable);
-
-        idCol = new TableColumn(columnNames[0]);
-        idCol.setPrefWidth(200);
+   /*     idCol = new TableColumn(columnNames[0]);
+        idCol.setPrefWidth(200);*/
         localeCol = new TableColumn(columnNames[1]);
         localeCol.setPrefWidth(80);
         countryCol = new TableColumn(columnNames[2]);
@@ -168,6 +173,13 @@ public class Main extends Application {
         realmCol = new TableColumn(columnNames[5]);
         costCol = new TableColumn(columnNames[6]);
         currCol = new TableColumn(columnNames[7]);
+        dataTable.getColumns().addAll(localeCol,countryCol,dateFromCol,dateToCol,realmCol,costCol,currCol);
+        VBox vbox = new VBox();
+        vbox.setSpacing(5);
+        vbox.setPadding(new Insets(10, 0, 0, 10));
+        vbox.getChildren().addAll(tableLabel, dataTable);
+
+
 
         tableBoxView.getChildren().addAll(vbox);
 
@@ -182,9 +194,6 @@ public class Main extends Application {
 
 
         ObservableList<Table_TRAVELDATA> resultListFromDb = db.selectFromDB(query);
-
-
-        rowsInTable = resultListFromDb.get(0).getRows();
 
 
         //idCol
