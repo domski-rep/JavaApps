@@ -105,8 +105,15 @@ public class Database {
             }
         }
 
+        //console log
         for (Table_TRAVELDATA t : resultList)
-            System.out.println(t.getLocale() + " " + t.getCountry() + " " + t.getDateFrom() + " " + t.getDateTo() +" " + t.getRealm() + " " + t.getCost() + " " + t.getCurr());
+            System.out.println(t.getLocale() + " "
+                    + t.getCountry() + " " + t.getDateFrom() + " "
+                    + t.getDateTo() + " " + t.getRealm() + " "
+                    + t.getCost() + " " + t.getCurr());
+        //========================================================
+
+        
         ObservableList<Table_TRAVELDATA> toObserve = FXCollections.observableList(resultList);
 
 
