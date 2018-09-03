@@ -44,6 +44,8 @@ public class Main extends Application {
         BorderPane layout = new BorderPane();
         scene = new Scene(layout, 750, 500);
         VBox menu = new VBox();
+        layout.getStyleClass().add("layout-canvas");
+        scene.getStylesheets().add("travel_data/styles/AppStyles.css");
 
         // ============================================
 
@@ -90,6 +92,7 @@ public class Main extends Application {
 
         // some more settings...
         Label signature = new Label("Created and developed by Bartosz Domański.");
+        signature.setPadding(new Insets (0,0,0,30));
         signature.setFont(new Font("Calibri", 12));
         layout.setLeft(menu);
         layout.setBottom(signature);
@@ -196,10 +199,11 @@ public class Main extends Application {
 
         Button y = new Button("YES!");
         y.setPrefSize(100, 50);
+        y.setId("button_y");
 
         Button n = new Button("NOOO!");
         n.setPrefSize(100, 50);
-
+        n.setId("button_n");
 
         Label quitLabel = new Label("Confirm! Are you sure you want to quit now?");
         quitLabel.setFont(Font.font("Arial", FontWeight.BOLD, 12));
@@ -214,8 +218,10 @@ public class Main extends Application {
         layout2.setAlignment(Pos.CENTER);
         layout.getChildren().addAll(quitLabel, layout2);
         layout.setAlignment(Pos.CENTER);
+        layout.getStyleClass().add("layout-confirmation");
 
         Scene confirm = new Scene(layout);
+        confirm.getStylesheets().add("travel_data/styles/ConfirmationWindowStyles.css");
 
         quit.setScene(confirm);
         quit.showAndWait();
@@ -246,6 +252,7 @@ public class Main extends Application {
 
         layout.getChildren().addAll(errorLabel, ok);
         layout.setAlignment(Pos.CENTER);
+
 
         Scene confirm = new Scene(layout);
 

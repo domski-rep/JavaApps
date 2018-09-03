@@ -1,0 +1,14 @@
+.button {
+    -fx-base: #8e9dad;
+}
+#button_y:hover {
+    -fx-base: #439953;
+}
+
+#button_n:hover {
+    -fx-base: #af3b3b;
+}
+
+.layout-confirmation {
+    -fx-base: #96a083;
+}
