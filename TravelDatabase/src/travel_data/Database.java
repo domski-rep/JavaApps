@@ -12,6 +12,7 @@ public class Database {
     private String url;
     private Connection connection;
     private final String[] columns = {"LOCALE", "COUNTRY", "DATE_FROM", "DATE_TO", "REALM", "COST", "CURR"};
+    private boolean databaseFound;
 
     public Database(String url, TravelData travelData) {
         this.travelData = travelData;
@@ -81,6 +82,7 @@ public class Database {
 
             while (result.next()) {
                 Table_TRAVELDATA record = new Table_TRAVELDATA(
+                        result.getString(1),
                         result.getString(2),
                         result.getString(3),
                         result.getString(4),
@@ -118,6 +120,16 @@ public class Database {
 
 
         return toObserve;
+    }
+
+    public boolean isDatabaseFound(){
+        try {
+            connection = DriverManager.getConnection(url);
+            databaseFound = true;
+        } catch (SQLException e) {
+            databaseFound = false;
+        }
+        return databaseFound;
     }
 
     public String[] getColumns() {

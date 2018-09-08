@@ -4,11 +4,13 @@ import javafx.beans.property.SimpleStringProperty;
 
 public class Table_TRAVELDATA {
 
-    private final SimpleStringProperty locale, country, dateFrom, dateTo, realm, cost, curr, no;
+    private final SimpleStringProperty  LOCALE, COUNTRY, DATE_FROM,
+            DATE_TO, REALM, COST, CURR,ID;
     private static int rows = 0;
 
 
     public Table_TRAVELDATA(
+            String id,
             String locale,
             String country,
             String dateFrom,
@@ -17,78 +19,77 @@ public class Table_TRAVELDATA {
             String cost,
             String curr
     ) {
-        rows++;
-        this.locale= new SimpleStringProperty(locale);
-        this.country  = new SimpleStringProperty(country);
-        this.dateFrom = new SimpleStringProperty(dateFrom);
-        this.dateTo = new SimpleStringProperty(dateTo);
-        this.realm = new SimpleStringProperty(realm);
-        this.cost = new SimpleStringProperty(cost);
-        this.curr=new SimpleStringProperty(curr);
-        this.no = new SimpleStringProperty(String.valueOf(rows));
+        this.ID = new SimpleStringProperty(id);
+        this.LOCALE= new SimpleStringProperty(locale);
+        this.COUNTRY= new SimpleStringProperty(country);
+        this.DATE_FROM= new SimpleStringProperty(dateFrom);
+        this.DATE_TO= new SimpleStringProperty(dateTo);
+        this.REALM = new SimpleStringProperty(realm);
+        this.COST = new SimpleStringProperty(cost);
+        this.CURR = new SimpleStringProperty(curr);
+
+
     }
+
     // GETTERS...
+    public String getId() { return ID.get(); }
+
     public String getLocale() {
-        return locale.get();
+        return LOCALE.get();
     }
 
     public String getCountry() {
-        return country.get();
+        return COUNTRY.get();
     }
 
     public String getDateFrom() {
-        return dateFrom.get();
+        return DATE_FROM.get();
     }
 
     public String getDateTo() {
-        return dateTo.get();
+        return DATE_TO.get();
     }
 
     public String getRealm() {
-        return realm.get();
+        return REALM.get();
     }
 
     public String getCost() {
-        return cost.get();
+        return COST.get();
     }
 
     public String getCurr() {
-        return curr.get();
+        return CURR.get();
     }
 
-    public String getNo(){ return no.get();}
 
     // SETTERS... for future usage
 
     public void setCountry(String country) {
-        this.country.set(country);
-    }
-
-    public int getRows() {
-        return rows;
+        this.COUNTRY.set(country);
     }
 
     public void setDateFrom(String dateFrom) {
-        this.dateFrom.set(dateFrom);
+        this.DATE_FROM.set(dateFrom);
     }
 
     public void setLocale(String locale) {
-        this.locale.set(locale);
+        this.LOCALE.set(locale);
     }
 
     public void setDateTo(String dateTo) {
-        this.dateTo.set(dateTo);
+        this.DATE_TO.set(dateTo);
     }
 
     public void setRealm(String realm) {
-        this.realm.set(realm);
+        this.REALM.set(realm);
     }
 
     public void setCost(String cost) {
-        this.cost.set(cost);
+        this.COST.set(cost);
     }
 
     public void setCurr(String curr) {
-        this.curr.set(curr);
+        this.CURR.set(curr);
     }
 }

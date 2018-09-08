@@ -11,11 +11,14 @@ import java.util.*;
 public class TravelData {
 
     private List<String> readedData;
-
+    private File file;
 
     public TravelData(File file) {
         readedData = new ArrayList<>();
+        this.file = file;
 
+    }
+    protected void startReadingFiles(){
         for (File files : getListOfFilesInDirectory(file)) {
             Scanner sc = null;
             try {
@@ -29,7 +32,6 @@ public class TravelData {
             }
         }
     }
-
 
     //Recursive method to get directory structure
     private List<File> getListOfFilesInDirectory(File dir) {

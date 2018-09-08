@@ -2,15 +2,17 @@ package travel_data;
 
 import javafx.application.Application;
 
-import javafx.collections.FXCollections;
+
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
+
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -20,12 +22,13 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+;
 import java.io.File;
 import java.util.*;
 
 
 public class Main extends Application {
-    private static final String[] columnNames = {"NR", "LOCALE", "COUNTRY", "DATE FROM", "DATE TO", "REALM", "COST", "CURR"};
+    private static final String[] columnNames = {"ID", "LOCALE", "COUNTRY", "DATE FROM", "DATE TO", "REALM", "COST", "CURR"};
     private static VBox tableBoxView;
     private static Scene scene;
     private static boolean tableVisible;
@@ -33,11 +36,16 @@ public class Main extends Application {
     private static Database db;
     private static TableColumn idCol, localeCol, countryCol, dateFromCol, dateToCol, realmCol, costCol, currCol;
     private static TableView<Table_TRAVELDATA> dataTable;
-
+    private static TravelData travelData;
 
     @Override
     public void start(Stage primaryStage) {
 
+        //DB AND TRAVELDATA INSTANCES ===================
+        String url = "jdbc:derby:C:\\TravelerZ Co.\\Database\\TravelData;create=true;user=test;password=test";
+        File dataDir = new File("data");
+        travelData = new TravelData(dataDir);
+        db = new Database(url, travelData);
         tableVisible = false;
 
         //Canvas ======================================
@@ -46,6 +54,15 @@ public class Main extends Application {
         VBox menu = new VBox();
         layout.getStyleClass().add("layout-canvas");
         scene.getStylesheets().add("travel_data/styles/AppStyles.css");
+        ImageView logo = new ImageView();
+        Image mainImage = new Image("travel_data/images/brand_logo_incomplete02_2.png");
+        logo.setImage(mainImage);
+        logo.setFitHeight(150);
+        logo.setFitWidth(230);
+        logo.setY(layout.getHeight()/2.6);
+        logo.setX(layout.getWidth()/2.6);
+        layout.getChildren().add(logo);
+
 
         // ============================================
 
@@ -98,7 +115,12 @@ public class Main extends Application {
         layout.setBottom(signature);
 
         primaryStage.setScene(scene);
+        primaryStage.getIcons().add(new Image("travel_data/images/icon.jpg"));
         primaryStage.setTitle("TravelerZ Co.");
+        primaryStage.setMinWidth(700);
+        primaryStage.setMinHeight(450);
+        primaryStage.setMaxWidth(750);
+        primaryStage.setMaxHeight(500);
         primaryStage.show();
 
         //!confirmation window
@@ -123,18 +145,19 @@ public class Main extends Application {
 
     // Reading data from directory
     private static void startButtonAction(ActionEvent actionEvent) {
-        File dataDir = new File("data");
-        TravelData travelData = new TravelData(dataDir);
-
+        travelData.startReadingFiles();
         // Main task form my academy ==============================================
         for (String locale : Arrays.asList("pl_PL", "en_GB")) {
             List<String> odlist = travelData.getOffersDescriptionsList(locale);
             for (String od : odlist) System.out.println(od);
         }
         //========================================================================
-        String url = "jdbc:derby:C:\\TravelerZ Co.\\Database\\TravelData;create=true;user=test;password=test";
-        db = new Database(url, travelData);
-        db.createDb();
+
+       if(!db.isDatabaseFound()) {
+            db.createDb();
+            System.out.println("Creating database...");
+       }
+        else System.out.println("Database already exist!");
 
     }
 
@@ -150,6 +173,7 @@ public class Main extends Application {
         dataTable = new TableView<>();
         dataTable.setEditable(true);
 
+
         Label tableLabel = new Label("TravelerZ Co. Data From Database by Derby");
         tableLabel.setFont(new Font("Comic Sans", 18));
 
@@ -161,10 +185,10 @@ public class Main extends Application {
         realmCol = new TableColumn(columnNames[5]);
         costCol = new TableColumn(columnNames[6]);
         currCol = new TableColumn(columnNames[7]);
-        dataTable.getColumns().addAll(idCol, countryCol, dateFromCol, dateToCol, realmCol, costCol, currCol);
+        dataTable.getColumns().addAll(idCol,localeCol, countryCol, dateFromCol, dateToCol, realmCol, costCol, currCol);
         VBox vbox = new VBox();
         vbox.setSpacing(5);
-        vbox.setPadding(new Insets(10, 0, 0, 10));
+        vbox.setPadding(new Insets(10, 30, 0, 10));
         vbox.getChildren().addAll(tableLabel, dataTable);
         tableBoxView.getChildren().addAll(vbox);
 
@@ -176,7 +200,7 @@ public class Main extends Application {
 
         ObservableList<Table_TRAVELDATA> resultListFromDb = db.selectFromDB(query);
 
-        idCol.setCellValueFactory(new PropertyValueFactory<Table_TRAVELDATA,String>("no"));
+        idCol.setCellValueFactory(new PropertyValueFactory<Table_TRAVELDATA,String>("id"));
         localeCol.setCellValueFactory(new PropertyValueFactory<Table_TRAVELDATA, String>("locale"));
         countryCol.setCellValueFactory(new PropertyValueFactory<Table_TRAVELDATA, String>("country"));
         dateFromCol.setCellValueFactory(new PropertyValueFactory<Table_TRAVELDATA, String>("dateFrom"));
