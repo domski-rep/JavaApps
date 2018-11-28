@@ -2,12 +2,12 @@ package travel_data;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Database {
+
     private TravelData travelData;
     private String url;
     private Connection connection;
@@ -25,16 +25,12 @@ public class Database {
 
             connection = DriverManager.getConnection(url);
             Statement state = connection.createStatement();
-
-
             state.execute("CREATE TABLE TRAVELDATA(" +
                     "ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) PRIMARY KEY," +
                     "LOCALE VARCHAR(100), COUNTRY VARCHAR(100), " +
                     "DATE_FROM DATE, DATE_TO DATE, REALM VARCHAR(100), COST VARCHAR(100)," +
                     "CURR VARCHAR(100))");
             state.close();
-
-
             connection.close();
 
         } catch (SQLException e) {
@@ -43,7 +39,6 @@ public class Database {
         }
     }
 
-    // Insert data readed from file into database
     protected void insertIntoDb() {
 
         try {
@@ -106,7 +101,6 @@ public class Database {
                 }
             }
         }
-
         //console log
         for (Table_TRAVELDATA t : resultList)
             System.out.println(t.getLocale() + " "
@@ -115,10 +109,7 @@ public class Database {
                     + t.getCost() + " " + t.getCurr());
         //========================================================
 
-        
         ObservableList<Table_TRAVELDATA> toObserve = FXCollections.observableList(resultList);
-
-
         return toObserve;
     }
 

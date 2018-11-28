@@ -46,7 +46,7 @@ public class TravelData {
 
     private String currencyTranslator(String money, String localeWeHave, String localeWeNeed) {
 
-        NumberFormat format = NumberFormat.getInstance(new Locale(localeWeHave));
+       NumberFormat format = NumberFormat.getInstance(new Locale(localeWeHave));
         ((DecimalFormat) format).setParseBigDecimal(true);
 
         try {
